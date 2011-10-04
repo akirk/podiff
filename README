@@ -1,0 +1,77 @@
+PODIFF README
+Copyright (C) 2011 Sergey Poznyakoff
+See the end of file for copying conditions.
+
+* Introduction
+
+This file contains brief information about configuring, testing
+and running PODIFF. It is *not* intended as a replacement
+for the documentation, which is provided in the podiff.1 file.
+
+* Overview
+
+PO files contain considerable amount of additional information in form
+of automatic comments.  This information is updated automatically by
+gettext tools, which often makes it difficult to track modifications
+to the translation itself.  For example, modifying one of the source
+files can cause a change in locations of all translatable strings in
+it, which will be reflected in automatic comments in the corresponding
+PO file and will thus create considerable amount of diff output, even
+if no messages in the file have changed.  This makes it difficult to
+track changes to PO files.
+
+PODIFF addresses this problem.  It finds differences in translatable
+strings and translations between two PO files or between two revisions
+of the same file.  Any changes in automatic and user comments and in
+spacing or ordering of the file entries are ignored.
+
+* Installation
+
+To compile, type `make' in the top source directory.  No configuration
+script is provided, the utility should compile on any POSIX system.
+
+To install, type `make install'.  The utility is installed in
+/usr/bin.  The following Make variables change that behavior:
+
+** PREFIX
+
+Installation prefix.  The default is "/usr".
+
+** BINDIR
+
+Directory to install the binary to.  Default is "$(PREFIX)/bin".
+
+** MANDIR
+
+Directory to install manual pages to.  Default is "$(PREFIX)/share/man".
+
+** DESTDIR
+
+Sets specific destination directory.  For example, `make
+DESTDIR=/tmp/dist'  will prepend `/tmp/dist' before all installation names.
+
+* Usage
+
+See podiff(1), section "EXAMPLE".
+
+
+* Copyright information:
+
+Copyright (C) 2011 Sergey Poznyakoff
+
+   Permission is granted to anyone to make or distribute verbatim copies
+   of this document as received, in any medium, provided that the
+   copyright notice and this permission notice are preserved,
+   thus giving the recipient permission to redistribute in turn.
+
+   Permission is granted to distribute modified versions
+   of this document, or of portions of it,
+   under the above conditions, provided also that they
+   carry prominent notices stating who last changed them.
+
+
+Local Variables:
+mode: outline
+paragraph-separate: "[ 	]*$"
+version-control: never
+End:

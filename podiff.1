@@ -1,0 +1,174 @@
+.\" This file is part of PODIFF -*- nroff -*-
+.\" Copyright (C) 2011 Sergey Poznyakoff
+.\"
+.\" PODIFF is free software; you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation; either version 3, or (at your option)
+.\" any later version.
+.\"
+.\" PODIFF is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with PODIFF.  If not, see <http://www.gnu.org/licenses/>.
+.\"
+.TH PODIFF 1 "October 4, 2011" "PODIFF" "User Commands"
+.SH NAME
+podiff \- compare textual information in two PO files
+
+.SH SYNOPSIS
+.B podiff
+[\fBOPTIONS\fR]
+.I FILE1
+.I FILE2
+
+.B podiff
+[\fBOPTIONS\fR]
+.I PATH
+.I OLD-FILE
+.I OLD-HEX
+.I OLD-MODE
+.I NEW-FILE
+.I NEW-HEX
+.I NEW-MODE
+
+.B podiff -t 
+[\fBOPTIONS\fR]
+.I FILE
+
+.B podiff
+[-vh]
+.SH DESCRIPTION
+The
+.B podiff
+utility finds differences in translatable strings and translations
+between two PO files or between two revisions of the same file.  It
+uses
+.BR diff (1)
+to generate the output.  Before comparing, it eliminates all comments
+and multiple empty lines, sorts the two files by their \fBmsgid\fR and
+reformats all textual strings in a uniform manner.  The utility is
+intended to help translators obtain meaningful information about
+changes they do to PO files.
+
+When supplied two non-optional arguments
+.B podiff
+acts as a standalone program and outputs differences between the
+two PO files.  Its exit code is 1 if the two files differ and 0
+otherwise.
+
+When given 7 arguments (second case above),
+.B podiff
+compares 
+.I OLD-FILE
+and
+.IR NEW-FILE .
+This mode is intended for use as a
+.BR git (1)
+external diff utility (see
+.I GIT_EXTERNAL_DIFF
+in
+.BR git (1)
+and
+.B "Generating diff text"
+in
+.BR gitattributes (5)).
+In this mode its exit code is always 0, except if some errors occur.
+See the
+.B EXAMPLE
+section below.
+
+The \fBpodiff\fR utility understand the following command line options:
+.TP
+\fB\-d\fR \fICMD\fR
+Use \fICMD\fR as a \fBdiff\fR utility.
+.TP
+\fB\-D\fR \fIOPTION\fR
+Pass \fIOPTION\fR as an option to the diff utility.
+.TP
+.B \-f
+Ignore fuzzy translations.
+.TP
+.B \-k
+Keep user comments on output.
+.TP
+\fB\-w\fR \fINUM\fR
+Limit output width to \fINUM\fR columns (see \fBBUGS\fR below, though).
+.TP
+.B \-t
+Test mode.  In this mode, \fBpodiff\fR takes a single file name as
+its argument and acts as a preprocessor for this file, producing its
+normalized version on the standard output.  This mode is intended for
+debugging.
+.TP
+.B \-h
+Prints a terse usage summary.
+.TP
+.B \-v
+Prints program version and licence information.
+.SH "RETURN VALUE"
+In standalone mode (2 arguments), the return code is 0 if the two
+files don't differ and 1 otherwise.
+
+In Git mode, the return code is 0 unless errors occur.
+
+The return code is 2 if an invalid command line option or invalid
+number of arguments is given.
+.SH EXAMPLE
+The following example shows how to use
+.B podiff
+as an external diff utility in
+.BR git (1).
+The system \fBdiff\fR utility will be passed the \fB\-u\fR option.
+
+First, add the following section to the
+.B .git/config
+file:
+.sp
+.RS 4
+.nf
+[diff "podiff"]
+        command = /usr/bin/podiff -D-u
+.RE
+.fi
+.sp
+Next, to the \fB.gitattributes\fR file in the directory with your PO
+files, add the following line:
+.sp
+.RS 4
+.nf
+*.po    diff=podiff
+.RE
+.fi
+.sp
+
+.SH "SEE ALSO"
+.BR diff (1),
+.BR git (1),
+.BR gitattributes (5).
+.SH BUGS
+The \fB\-w\fR option actually operates on \fBbytes\fR, not characters,
+therefore actual output width can be less than its argument.
+.SH AUTHORS
+Sergey Poznyakoff
+.SH "BUG REPORTS"
+Report bugs to <gray@gnu.org.ua>.
+.SH COPYRIGHT
+Copyright \(co 2011 Sergey Poznyakoff
+.br
+.na
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+.br
+.ad
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+.\" Local variables:
+.\" eval: (add-hook 'write-file-hooks 'time-stamp)
+.\" time-stamp-start: ".TH [A-Z_][A-Z0-9_]* [0-9] \""
+.\" time-stamp-format: "%:B %:d, %:y"
+.\" time-stamp-end: "\""
+.\" time-stamp-line-limit: 20
+.\" end:
+
