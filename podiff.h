@@ -69,6 +69,7 @@ struct list *parse_po(const char *file);
 
 struct msgtrans {
 	struct list *comment;
+	char *msgctxt;
 	char *msgid;
 	char *msgid_plural;
 	struct list *msgstr;

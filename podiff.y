@@ -1,5 +1,5 @@
 /* This file is part of PODIFF.
-   Copyright (C) 2011 Sergey Poznyakoff
+   Copyright (C) 2011, 2012 Sergey Poznyakoff
 
    PODIFF is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,11 +31,11 @@ int skip_entry;
 	struct { unsigned line; int num; char *str; } imsgstr;
 };
 
-%token <string> STRING FLAG COMMENT
+%token <string> STRING FLAG COMMENT MSGCTXT 
 %token <number> NUMBER
 %token MSGID MSGID_PLURAL MSGSTR FUZZY OLDTRANS 
 
-%type <string> msgid msgid_plural msgstr
+%type <string> msgid msgid_plural msgstr msgctxt
 %type <acc> strings
 %type <lst> msgstrlist entries ocomm comment
 %type <imsgstr> imsgstr
@@ -64,35 +64,37 @@ entries   : entry
 	    }
           ;
 
-entry     : ocomm oflags msgid msgstr
+entry     : ocomm oflags msgctxt msgid msgstr
             {
 		    if (skip_entry)
 			    $$ = NULL;
 		    else {
 			    $$ = emalloc(sizeof(*$$));
 			    $$->comment = $1;
-			    $$->msgid = $3;
+			    $$->msgctxt = $3;
+			    $$->msgid = $4;
 			    $$->msgid_plural = NULL;
 			    $$->msgstr = list_create();
 			    $$->msgstr->free_entry = free;
-			    list_append($$->msgstr, $4);
+			    list_append($$->msgstr, $5);
 		    }
 		    skip_entry = 0;
 	    }
-          | ocomm oflags msgid msgid_plural msgstrlist
+          | ocomm oflags msgctxt msgid msgid_plural msgstrlist
             {
 		    if (skip_entry)
 			    $$ = NULL;
 		    else {
 			    $$ = emalloc(sizeof(*$$));
 			    $$->comment = $1;
-			    $$->msgid = $3;
-			    $$->msgid_plural = $4;
-			    $$->msgstr = $5;
+			    $$->msgctxt = $3;
+			    $$->msgid = $4;
+			    $$->msgid_plural = $5;
+			    $$->msgstr = $6;
 		    }
 		    skip_entry = 0;
 	    }
-          | ocomm oflags oldentry
+          | ocomm oflags msgctxt oldentry
             {
 		    /* FIXME: Reclaim memory */
 		    $$ = NULL;
@@ -133,6 +135,16 @@ comment   : COMMENT
           | comment COMMENT
             {
 		    list_append($1, $2);
+	    }
+          ;
+
+msgctxt   : /* empty */
+            {
+		    $$ = NULL;
+	    }
+          | MSGCTXT STRING
+	    {
+		    $$ = $2;
 	    }
           ;
 
@@ -211,6 +223,18 @@ msgtrans_sort_id(void const *a, void const *b)
 {
 	struct msgtrans const *pa = a;
 	struct msgtrans const *pb = b;
-	return strcmp(pa->msgid, pb->msgid);
+	int rc;
+
+	rc = strcmp(pa->msgid, pb->msgid);
+	if (rc == 0) {
+		if (pa->msgctxt) {
+			if (pb->msgctxt)
+				rc = strcmp(pa->msgctxt, pb->msgctxt);
+			else
+				rc = -1;
+		} else if (pb->msgctxt)
+			rc = 1;
+	}
+	return rc;
 }
 

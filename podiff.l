@@ -1,5 +1,5 @@
 /* This file is part of PODIFF.
-   Copyright (C) 2011 Sergey Poznyakoff
+   Copyright (C) 2011, 2012 Sergey Poznyakoff
 
    PODIFF is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -48,6 +48,7 @@ unsigned line_no;
                     return FLAG;
 }
 <FLG>.            /* skip bad character */;
+msgctxt           return MSGCTXT;
 msgid             return MSGID;
 msgid_plural      return MSGID_PLURAL;
 msgstr            return MSGSTR;
@@ -122,6 +123,7 @@ parse_po(const char *file)
 		acc = txtacc_create();
 	file_name = file;
 	line_no = 1;
+
 	if (yyparse())
 		exit(3);
 	fclose(fp);

@@ -1,5 +1,5 @@
 # This file is part of PODIFF.
-# Copyright (C) 2011 Sergey Poznyakoff
+# Copyright (C) 2011, 2012 Sergey Poznyakoff
 #
 # PODIFF is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 # along with this PODIFF.  If not, see <http://www.gnu.org/licenses/>.
 
 PACKAGE=podiff
-VERSION=1.0
+VERSION=1.1
 
 PREFIX=/usr
 BINDIR=$(PREFIX)/bin
@@ -27,7 +27,7 @@ HEADERS=podiff.h
 YACCSRC=podiff.y podiff.l
 BUILT_FILES=lex.yy.c y.tab.c y.tab.h
 MANFILES=podiff.1
-EXTRA_DIST=COPYING README
+EXTRA_DIST=COPYING README NEWS
 
 CFLAGS=-ggdb
 LIBS=
