@@ -1,5 +1,5 @@
 # This file is part of PODIFF.
-# Copyright (C) 2011, 2012 Sergey Poznyakoff
+# Copyright (C) 2011, 2012, 2013 Sergey Poznyakoff
 #
 # PODIFF is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 # along with this PODIFF.  If not, see <http://www.gnu.org/licenses/>.
 
 PACKAGE=podiff
-VERSION=1.1
+VERSION=1.2
 
 PREFIX=/usr
 BINDIR=$(PREFIX)/bin

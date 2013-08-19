@@ -1,5 +1,5 @@
 /* This file is part of PODIFF.
-   Copyright (C) 2011, 2012 Sergey Poznyakoff
+   Copyright (C) 2011, 2012, 2013 Sergey Poznyakoff
 
    PODIFF is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -219,6 +219,7 @@ help(FILE *fp)
 	fprintf(fp, " -D OPT  pass OPT to diff\n");
 	fprintf(fp, " -f      skip fuzzy translations\n");
 	fprintf(fp, " -k      keep user comments in output\n");
+	fprintf(fp, " -L      CMD understands -L option\n");
 	fprintf(fp, " -w NUM  set output text width to NUM colums\n");
 	fprintf(fp, "\nReport bugs to <gray@gnu.org>.\n");
 }
@@ -227,7 +228,7 @@ void
 show_version()
 {
 	puts("podiff " VERSION "\n"
-"Copyright (C) 2011, 2012 Sergey Poznyakoff\n"
+"Copyright (C) 2011, 2012, 2013 Sergey Poznyakoff\n"
 "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\n"
 "This is free software: you are free to change and redistribute it.\n"
 "There is NO WARRANTY, to the extent permitted by law.\n");
@@ -242,10 +243,11 @@ main(int argc, char **argv)
 	char *args, *command;
 	size_t size;
 	int ignore_rc;
+	int label_option = 0;
 
 	progname = argv[0];
 	diffargs = txtacc_create();
-	while ((rc = getopt(argc, argv, "d:D:fhktvw:")) != EOF) {
+	while ((rc = getopt(argc, argv, "d:D:fhkLtvw:")) != EOF) {
 		switch (rc) {
 		case 'f':
 			skip_fuzzy_option = 1;
@@ -262,6 +264,10 @@ main(int argc, char **argv)
 
 		case 'k':
 			keep_comments_option = 1;
+			break;
+			
+		case 'L':
+			label_option = 1;
 			break;
 			
 		case 't':
@@ -322,6 +328,12 @@ main(int argc, char **argv)
 			exit(2);
 		}
 		
+		if (label_option) {
+			txtacc_grow(diffargs, " -La/", 5);
+			txtacc_grow(diffargs, argv[0], strlen(argv[0]));
+			txtacc_grow(diffargs, " -Lb/", 5);
+			txtacc_grow(diffargs, argv[0], strlen(argv[0]));
+		}
 		tmp[0] = po_file_normalize(argv[1]);
 		tmp[1] = po_file_normalize(argv[4]);
 		ignore_rc = git_diff_header = 1;

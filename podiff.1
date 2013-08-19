@@ -23,7 +23,7 @@ podiff \- compare textual information in two PO files
 [\fBOPTIONS\fR]
 .I FILE1
 .I FILE2
-
+.br
 .B podiff
 [\fBOPTIONS\fR]
 .I PATH
@@ -33,13 +33,13 @@ podiff \- compare textual information in two PO files
 .I NEW-FILE
 .I NEW-HEX
 .I NEW-MODE
-
-.B podiff -t 
+.br
+.B podiff \-t 
 [\fBOPTIONS\fR]
 .I FILE
-
+.br
 .B podiff
-[-vh]
+.BR "" [ \-vh ]
 .SH DESCRIPTION
 The
 .B podiff
@@ -52,13 +52,13 @@ and multiple empty lines, sorts the two files by their \fBmsgid\fR and
 reformats all textual strings in a uniform manner.  The utility is
 intended to help translators obtain meaningful information about
 changes they do to PO files.
-
+.PP
 When supplied two non-optional arguments
 .B podiff
 acts as a standalone program and outputs differences between the
 two PO files.  Its exit code is 1 if the two files differ and 0
 otherwise.
-
+.PP
 When given 7 arguments (second case above),
 .B podiff
 compares 
@@ -94,6 +94,15 @@ Ignore fuzzy translations.
 .B \-k
 Keep user comments on output.
 .TP
+.B \-L
+External \fBdiff\fR understands the \fB\-L\fR option.  If this option
+is given, 
+.B podiff
+will pass two additional options to 
+.BR diff :
+\fB\-La/\fIFILE\fB \-Lb/\fIFILE\fR,
+where \fIFILE\fR is the pathname of the file being diff'ed.
+.TP
 \fB\-w\fR \fINUM\fR
 Limit output width to \fINUM\fR columns (see \fBBUGS\fR below, though).
 .TP
@@ -122,28 +131,22 @@ The following example shows how to use
 as an external diff utility in
 .BR git (1).
 The system \fBdiff\fR utility will be passed the \fB\-u\fR option.
-
+.PP
 First, add the following section to the
 .B .git/config
 file:
-.sp
-.RS 4
-.nf
+.PP
+.EX
 [diff "podiff"]
-        command = /usr/bin/podiff -D-u
-.RE
-.fi
-.sp
+        command = /usr/bin/podiff \-D\-u \-L
+.EE
+.PP
 Next, to the \fB.gitattributes\fR file in the directory with your PO
 files, add the following line:
-.sp
-.RS 4
-.nf
+.PP
+.EX
 *.po    diff=podiff
-.RE
-.fi
-.sp
-
+.EE
 .SH "SEE ALSO"
 .BR diff (1),
 .BR git (1),
@@ -156,7 +159,7 @@ Sergey Poznyakoff
 .SH "BUG REPORTS"
 Report bugs to <gray@gnu.org.ua>.
 .SH COPYRIGHT
-Copyright \(co 2011 Sergey Poznyakoff
+Copyright \(co 2011,2012,2013 Sergey Poznyakoff
 .br
 .na
 License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
