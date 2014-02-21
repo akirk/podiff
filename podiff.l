@@ -62,7 +62,7 @@ msgstr            return MSGSTR;
 			    txtacc_grow(acc, yytext+1, yyleng-3);
 			    txtacc_grow(acc, "\n", 1);
 		    } else
-			    txtacc_grow(acc, yytext+1, yyleng-2); }
+			    txtacc_grow(acc, yytext, yyleng); }
 <STR>[^\\"\n]*\\. { if (yytext[yyleng-1] == 'n') {
 			    txtacc_grow(acc, yytext, yyleng-1);
 			    txtacc_grow(acc, "\n", 1);
