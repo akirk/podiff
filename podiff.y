@@ -17,9 +17,9 @@
 %{
 #include <string.h>
 #include "podiff.h"
-#include "y.tab.h"	
+#include "y.tab.h"
 
-int skip_entry;	
+int skip_entry;
 %}
 
 %union {
@@ -31,9 +31,9 @@ int skip_entry;
 	struct { unsigned line; int num; char *str; } imsgstr;
 };
 
-%token <string> STRING FLAG COMMENT MSGCTXT 
+%token <string> STRING FLAG COMMENT MSGCTXT
 %token <number> NUMBER
-%token MSGID MSGID_PLURAL MSGSTR FUZZY OLDTRANS 
+%token MSGID MSGID_PLURAL MSGSTR FUZZY OLDTRANS
 
 %type <string> msgid msgid_plural msgstr msgctxt
 %type <acc> strings
@@ -48,7 +48,7 @@ input     : entries
 		    msgtrans_list->cmp = msgtrans_sort_id;
 	    }
           ;
- 
+
 entries   : entry
             {
 		    $$ = list_create();
@@ -142,9 +142,10 @@ msgctxt   : /* empty */
             {
 		    $$ = NULL;
 	    }
-          | MSGCTXT STRING
+          | MSGCTXT strings
 	    {
-		    $$ = $2;
+		    $$ = txtacc_finish($2, 1);
+		    txtacc_free($2);
 	    }
           ;
 
